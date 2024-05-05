@@ -2,7 +2,6 @@ import type { LinksFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
-  Link,
   Links,
   Meta,
   NavLink,
@@ -10,6 +9,7 @@ import {
   ScrollRestoration,
   Outlet,
   useLoaderData,
+  useNavigation,
 } from "@remix-run/react";
 // Note: CSSファイルをJSモジュールに直接インポートできる。
 import appStylesHref from "./app.css?url";
@@ -48,6 +48,9 @@ export const loader = async () => {
  */
 export default function App() {
   const { contacts } = useLoaderData<typeof loader>();
+  // Note: Remixは次のページのデータを読み込むまで、古いページを表示しない。
+  // Note: UXの向上のため、ユーザーにフィードバックするため以下を使用する   
+  const navigation = useNavigation();
 
   return (
     <html lang="en">
@@ -114,7 +117,9 @@ export default function App() {
         </div>
 
         {/* Note: 子ルートがアウトレットを通じてレンダリングされる */}
-         <div id="detail">
+         <div className={
+            navigation.state === "loading" ? "loading" : ""
+          } id="detail">
           <Outlet />
         </div>
 
