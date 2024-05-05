@@ -15,6 +15,11 @@ import appStylesHref from "./app.css?url";
 
 import { getContacts } from "./data";
 
+// Note: HTMLについて
+// Note: form要素はリンクのようにブラウザ内のナビゲーションをトリガーする。
+// Note: リンクはURLのみを変更するが、formはGET, POSTのリクエストやリクエストBodyを送信する。
+// Note: Remixではリクエストをサーバーに送信する代わりにクライアント側のルーティングを使用し送信する
+
 // RemixのLinksにCSSモジュールを適用する
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
