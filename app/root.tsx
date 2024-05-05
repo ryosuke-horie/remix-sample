@@ -1,3 +1,4 @@
+import type { LinksFunction } from "@remix-run/node";
 import {
   Form,
   Links,
@@ -5,6 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+// Note: CSSファイルをJSモジュールに直接インポートできる。
+import appStylesHref from "./app.css?url";
+
+// RemixのLinksにCSSモジュールを適用する
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: appStylesHref },
+];
 
 /**
  * Note: UIで最初にレンダリングされる。
