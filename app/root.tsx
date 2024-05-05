@@ -16,6 +16,8 @@ import appStylesHref from "./app.css?url";
 
 import { createEmptyContact, getContacts } from "./data";
 
+import { useEffect } from "react";
+
 // Note: HTMLについて
 // Note: form要素はリンクのようにブラウザ内のナビゲーションをトリガーする。
 // Note: リンクはURLのみを変更するが、formはGET, POSTのリクエストやリクエストBodyを送信する。
@@ -43,7 +45,7 @@ export const loader = async ({
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
-  return json({ contacts });
+  return json({ contacts, q });
 };
 
 /**
@@ -51,10 +53,17 @@ export const loader = async ({
  * Note：通常はページのグローバルレイアウトが含まれる。
  */
 export default function App() {
-  const { contacts } = useLoaderData<typeof loader>();
+  const { contacts, q } = useLoaderData<typeof loader>();
   // Note: Remixは次のページのデータを読み込むまで、古いページを表示しない。
   // Note: UXの向上のため、ユーザーにフィードバックするため以下を使用する   
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const searchField = document.getElementById("q");
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || "";
+    }
+  }, [q]);
 
   return (
     <html lang="en">
@@ -71,6 +80,7 @@ export default function App() {
             <Form id="search-form" role="search">
               <input
                 id="q"
+                defaultValue={q || ""}
                 aria-label="Search contacts"
                 placeholder="Search"
                 type="search"
