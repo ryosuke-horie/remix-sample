@@ -1,13 +1,15 @@
 import type { LinksFunction } from "@remix-run/node";
 import {
   Form,
+  Link,
   Links,
   Meta,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+  Outlet} from "@remix-run/react";
 // Note: CSSファイルをJSモジュールに直接インポートできる。
 import appStylesHref from "./app.css?url";
+
 
 // RemixのLinksにCSSモジュールを適用する
 export const links: LinksFunction = () => [
@@ -48,13 +50,19 @@ export default function App() {
           <nav>
             <ul>
               <li>
-                <a href={`/contacts/1`}>Your Name</a>
+                {/* Note: クライアント側のルーティングではなくURLに対するドキュメントリクエストが可能 */}
+                <Link to={`/contacts/1`}>Your Name</Link>
               </li>
               <li>
-                <a href={`/contacts/2`}>Your Friend</a>
+                <Link to={`/contacts/2`}>Your Friend</Link>
               </li>
             </ul>
           </nav>
+        </div>
+
+        {/* Note: 子ルートがアウトレットを通じてレンダリングされる */}
+         <div id="detail">
+          <Outlet />
         </div>
 
         <ScrollRestoration />
