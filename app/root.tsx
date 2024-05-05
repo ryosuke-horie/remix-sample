@@ -6,6 +6,10 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+/**
+ * Note: UIで最初にレンダリングされる。
+ * Note：通常はページのグローバルレイアウトが含まれる。
+ */
 export default function App() {
   return (
     <html lang="en">
