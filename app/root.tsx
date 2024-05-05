@@ -13,12 +13,22 @@ import {
 // Note: CSSファイルをJSモジュールに直接インポートできる。
 import appStylesHref from "./app.css?url";
 
-import { getContacts } from "./data";
+import { createEmptyContact, getContacts } from "./data";
 
 // Note: HTMLについて
 // Note: form要素はリンクのようにブラウザ内のナビゲーションをトリガーする。
 // Note: リンクはURLのみを変更するが、formはGET, POSTのリクエストやリクエストBodyを送信する。
 // Note: Remixではリクエストをサーバーに送信する代わりにクライアント側のルーティングを使用し送信する
+
+// Note: Formによってブラウザがサーバーにリクエストを送信する代わりに、
+// Note: Remixはクライアント側のルーティングを使用してページを更新する。
+// Note: WEB標準で、POSTは一部のデータが変更されていることを示し、
+// Note: 慣例に従い、Remixは自動的にデータを再検証する
+export const action = async () => {
+  // Note: 空の連絡先を作成する
+  const contact = await createEmptyContact();
+  return json({ contact });
+};
 
 // RemixのLinksにCSSモジュールを適用する
 export const links: LinksFunction = () => [
