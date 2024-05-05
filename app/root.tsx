@@ -1,4 +1,5 @@
 import type { LinksFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Form,
   Link,
@@ -6,21 +7,32 @@ import {
   Meta,
   Scripts,
   ScrollRestoration,
-  Outlet} from "@remix-run/react";
+  Outlet,
+  useLoaderData,
+} from "@remix-run/react";
 // Note: CSSファイルをJSモジュールに直接インポートできる。
 import appStylesHref from "./app.css?url";
 
+import { getContacts } from "./data";
 
 // RemixのLinksにCSSモジュールを適用する
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
 ];
 
+// Note:data.tsからデータを取得するローダー
+export const loader = async () => {
+  const contacts = await getContacts();
+  return json({ contacts });
+};
+
 /**
  * Note: UIで最初にレンダリングされる。
  * Note：通常はページのグローバルレイアウトが含まれる。
  */
 export default function App() {
+  const { contacts } = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -48,15 +60,31 @@ export default function App() {
             </Form>
           </div>
           <nav>
-            <ul>
-              <li>
-                {/* Note: クライアント側のルーティングではなくURLに対するドキュメントリクエストが可能 */}
-                <Link to={`/contacts/1`}>Your Name</Link>
-              </li>
-              <li>
-                <Link to={`/contacts/2`}>Your Friend</Link>
-              </li>
-            </ul>
+            {contacts.length ? (
+              <ul>
+                {contacts.map((contact) => (
+                  <li key={contact.id}>
+                    <Link to={`contacts/${contact.id}`}>
+                      {contact.first || contact.last ? (
+                        <>
+                          {contact.first} {contact.last}
+                        </>
+                      ) : (
+                        <i>No Name</i>
+                      )}{" "}
+                      {contact.favorite ? (
+                        <span>★</span>
+                      ) : null}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>
+                <i>No contacts</i>
+              </p>
+            )}
+
           </nav>
         </div>
 
